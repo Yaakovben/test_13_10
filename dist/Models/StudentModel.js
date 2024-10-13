@@ -1,22 +1,13 @@
-import mongoose, { ObjectId } from "mongoose";
-import { Document, Schema, model } from "mongoose";
-import validator from "validator";
-
-interface Itest extends Document {
-    title: string;
-    score: number;
-}
-
-interface Istudent extends Document {
-    user_name: string;
-    password: string;
-    email: string;
-    grade_average : number
-    class_ref: ObjectId;
-    score: Itest[];
-}
-
-const testSchema = new Schema<Itest>({
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StudentModel = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+const mongoose_2 = require("mongoose");
+const validator_1 = __importDefault(require("validator"));
+const testSchema = new mongoose_2.Schema({
     title: {
         type: String,
         required: [true, "title is required"],
@@ -29,8 +20,7 @@ const testSchema = new Schema<Itest>({
         max: [100, "score must be at most 100"],
     }
 });
-
-const studentSchema = new Schema<Istudent>({
+const studentSchema = new mongoose_2.Schema({
     user_name: {
         type: String,
         required: [true, "user name is required"],
@@ -45,29 +35,24 @@ const studentSchema = new Schema<Istudent>({
     email: {
         type: String,
         required: [true, "email is required"],
-        validate: [validator.isEmail, "invalid email"],
+        validate: [validator_1.default.isEmail, "invalid email"],
         trim: true,
         unique: true
     },
     class_ref: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "teacher",
         required: [true, "class is required"],
     },
-    grade_average : {
+    grade_average: {
         type: Number
     },
     score: {
         type: [testSchema],
         default: []
     }
-},{
+}, {
     timestamps: true
-    });
-
-
-const StudentModel = mongoose.model<Istudent>("post", studentSchema);
-
-
-
-export { StudentModel, Istudent, Itest}
+});
+const StudentModel = mongoose_1.default.model("post", studentSchema);
+exports.StudentModel = StudentModel;
