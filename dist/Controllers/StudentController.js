@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = void 0;
+exports.getMyAverageGrade = exports.register = void 0;
 const StudentService_1 = require("../Services/StudentService");
 const register = async (req, res) => {
     try {
@@ -13,3 +13,14 @@ const register = async (req, res) => {
     }
 };
 exports.register = register;
+const getMyAverageGrade = async (req, res) => {
+    try {
+        const user_id = req.user.userId;
+        const data = await (0, StudentService_1.getMyStudentsService)(user_id);
+        res.status(200).json({ error: false, message: "success getting average grade", data });
+    }
+    catch (error) {
+        res.status(500).json({ message: "could not get average grade", 'error': error });
+    }
+};
+exports.getMyAverageGrade = getMyAverageGrade;

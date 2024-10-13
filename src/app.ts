@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser";
 import { specs, swaggerUi } from "./Swagger/Swagger"
 import  UserRouter  from "./Routers/TeacherRouter";
 import  TodoRouter  from "./Routers/StudentRouter";
-import PostRouter from "./Routers/PostRouter";
 import AuthRouter from "./Routers/AuthRouter";
 import { ErrorRequestHandler } from "express";
 

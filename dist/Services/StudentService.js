@@ -3,16 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createStudentService = void 0;
+exports.getMyStudentsService = exports.createStudentService = void 0;
 const StudentModel_1 = require("../Models/StudentModel");
 const TeacherModel_1 = require("../Models/TeacherModel");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const createStudentService = async (user) => {
     try {
         console.log(user);
         const { user_name, password, email, class_name } = user;
         if (!user_name || !password || !email || !class_name) {
             throw new Error("All fields are required");
+        }
+        const user_nameExists = await TeacherModel_1.TeacherModel.findOne({ user_name }).exec();
+        if (user_nameExists) {
+            throw new Error("user name is not available");
         }
         const classExists = await TeacherModel_1.TeacherModel.findOne({ class_name }).exec();
         if (!classExists) {
@@ -31,3 +36,28 @@ const createStudentService = async (user) => {
     }
 };
 exports.createStudentService = createStudentService;
+const getMyStudentsService = async (student_id) => {
+    try {
+        const student = await StudentModel_1.StudentModel.findById(student_id);
+        if (!student) {
+            throw new Error("Student not found");
+        }
+        const average = await StudentModel_1.StudentModel.aggregate([
+            { $match: { _id: new mongoose_1.default.Types.ObjectId(student_id) } },
+            { $unwind: "$grades" },
+            { $group: { _id: "$_id", avg_grade: { $avg: "$grades.grade" } } },
+            {
+                $project: {
+                    _id: 0,
+                    my_average_grade: { $round: ["$avg_grade", 1] }
+                }
+            }
+        ]);
+        return average;
+    }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+exports.getMyStudentsService = getMyStudentsService;

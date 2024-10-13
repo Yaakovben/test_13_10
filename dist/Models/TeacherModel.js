@@ -13,6 +13,7 @@ const teacherSchema = new mongoose_2.Schema({
         required: [true, "user name is required"],
         minlength: [3, "user name must be at least 3 characters"],
         trim: true,
+        unique: true
     },
     password: {
         type: String,
@@ -44,5 +45,6 @@ exports.teacherSchema = teacherSchema;
 //  יצירת אינדקס ייחודי על שדה האימייל והכיתה
 teacherSchema.index({ email: 1 }, { unique: true });
 teacherSchema.index({ class_name: 1 }, { unique: true });
+teacherSchema.index({ user_name: 1 }, { unique: true });
 const TeacherModel = mongoose_1.default.model("teacher", teacherSchema);
 exports.TeacherModel = TeacherModel;

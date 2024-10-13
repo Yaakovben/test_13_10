@@ -3,6 +3,7 @@ import { StudentModel } from "../Models/StudentModel"
 import { TeacherModel } from "../Models/TeacherModel"
 import { ObjectId } from "mongoose"
 import bcrypt from "bcrypt"
+import mongoose from "mongoose"
 import { NewUserDto } from "../Types/Interfaces/dto/reqDto"
 
 
@@ -13,6 +14,10 @@ const createStudentService = async (user: NewUserDto) => {
         const{user_name, password, email , class_name} = user
         if (!user_name || !password || !email || !class_name) {
             throw new Error("All fields are required");
+        }
+        const user_nameExists = await TeacherModel.findOne({user_name}).exec();
+        if (user_nameExists) {
+            throw new Error("user name is not available");
         }
         const classExists = await TeacherModel.findOne({class_name}).exec();
         if (!classExists) {
@@ -31,117 +36,34 @@ const createStudentService = async (user: NewUserDto) => {
     }
 } 
 
+const getMyStudentsService = async (student_id: string): Promise<any> => {
+    try {
 
+        const student = await StudentModel.findById(student_id)
+        if (!student) {
+            throw new Error("Student not found")
+        }
+        const average = await StudentModel.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(student_id) } },
+            { $unwind: "$grades" },
+            { $group: { _id: "$_id", avg_grade: { $avg: "$grades.grade" } } },
+            {
+                $project: {
+                    _id: 0,
+                    my_average_grade: { $round: ["$avg_grade", 1] }
+                }
+            }
+        ])
+        return average
+    }
+    catch (error) {
+        console.log(error)
+        throw error
+    }
+}
 
-
-
-
-
-// const createPostService = async (userId: string, post: postDto): Promise<Ipost> => {
-//     try {
-//         const user = await UserModel.findById(userId)
-//         if (!user) {
-//             throw new Error("user not found")
-//         }
-
-//         const { title, content } = post
-//         if (!title || !content) {
-//             throw new Error("all fields are required")
-//         }
-        
-//         const newPost = new PostModel({ title, content })
-
-//         newPost.author = user._id as ObjectId
-//         await newPost.save()
-
-//         user.posts.push(newPost._id as ObjectId)
-//         await user.save()
-
-//         return newPost
-
-//     } catch (error) {
-//         throw error
-//     }
-// }
-
-
-// const getPostsService = async (userId: string): Promise<any[]> => {
-//     try {
-//         const user = await UserModel.findById(userId)
-//         if (!user) {
-//             throw new Error("user not found")
-//         }
-//         // return user.populate("posts")
-//         // const posts = PostModel.find({author: user._id})
-//         const posts = PostModel.find()
-//         .select('title content createdAt -_id')
-//         .populate({
-//             path: "author",
-//             select: "user_name email -_id",
-//           }).populate({
-//             path: "comments.author",
-//             select: "user_name",
-//           });
-//         return posts
-//     } catch (error) {
-//         throw error
-//     }
-// }
-
-
-// const deletePostService = async (userId: string, postId: string): Promise<Ipost> => {
-//     try {
-//         const user : Iuser | null  = await UserModel.findById(userId)
-//         if (!user) {
-//             throw new Error("user not found")
-//         }
-//         console.log(postId)
-//         const post = await PostModel.findById(postId)
-//         if (!post) {
-//             throw new Error("post not found")
-//         }
-//         if (post.author.toString() !== (user._id as ObjectId).toString()) {
-//             throw new Error("you are not the author of this post")
-//         }
-//         //delete post
-//         await PostModel.findByIdAndDelete(postId) 
-//         // delete post referenced from user
-//         const result = await user.updateOne(
-//             { posts: postId },
-//             { $pull: { posts: postId } }
-//           );
-//         if (result.modifiedCount === 0) {
-//             throw new Error("post not deleted")
-//         }
-//         return post
-//     } catch (error) {
-//         throw error
-//     }
-// }
-
-// const updatePostService = async (userId: string, postId: string, post: postDto): Promise<Ipost> => {
-//     try {
-//         const user = await UserModel.findById(userId)
-//         if (!user) {
-//             throw new Error("user not found")
-//         }
-//         const postToUpdate = await PostModel.findById(postId)
-//         if (!postToUpdate) {
-//             throw new Error("post not found")
-//         }
-//         if (postToUpdate.author.toString() !== (user._id as ObjectId).toString()) {
-//             throw new Error("you are not the author of this post")
-//         }
-//         const updatedPost = await PostModel.findByIdAndUpdate(postId, post, { new: true })
-//         if (!updatedPost) {
-//             throw new Error("post not found")
-//         }
-//         return updatedPost
-//     } catch (error) {
-//         throw error
-//     }
-// }
 
 export { 
     createStudentService,
+    getMyStudentsService
  }

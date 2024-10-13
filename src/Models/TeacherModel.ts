@@ -20,6 +20,7 @@ const teacherSchema = new Schema<Iteacher>({
         required: [true, "user name is required"],
         minlength: [3, "user name must be at least 3 characters"],
         trim: true,
+        unique: true
     },
     password: {
         type: String,
@@ -52,6 +53,7 @@ timestamps: true
 //  יצירת אינדקס ייחודי על שדה האימייל והכיתה
 teacherSchema.index({ email: 1 }, { unique: true });
 teacherSchema.index({ class_name: 1 }, { unique: true });
+teacherSchema.index({ user_name: 1 }, { unique: true });
 
 const TeacherModel = mongoose.model<Iteacher>("teacher", teacherSchema);
 

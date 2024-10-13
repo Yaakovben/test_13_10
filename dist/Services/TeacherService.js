@@ -15,6 +15,10 @@ const createTeacher = async (user) => {
         if (!user_name || !password || !email || !class_name) {
             throw new Error("All fields are required");
         }
+        const user_nameExists = await StudentModel_1.StudentModel.findOne({ user_name }).exec();
+        if (user_nameExists) {
+            throw new Error("user name is not available");
+        }
         const hashedPassword = await bcrypt_1.default.hash(password, 10);
         const dbUser = new TeacherModel_1.TeacherModel({ user_name, password: hashedPassword, email, class_name });
         await dbUser.save();

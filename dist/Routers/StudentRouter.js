@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const StudentController_1 = require("../Controllers/StudentController");
+const { getMyAverageGrade } = require("../Controllers/StudentController");
+const AuthMiddelwares_1 = require("../Midllewares/AuthMiddelwares");
 const router = express_1.default.Router();
 /**
  * @swagger
@@ -45,4 +47,18 @@ const router = express_1.default.Router();
  *         description: Bad request
  */
 router.post("/register", StudentController_1.register);
+/**
+ * @swagger
+ * /students/my-average:
+ *   get:
+ *     summary: Get my average grade
+ *     tags:
+ *       - Student
+ *     responses:
+ *       201:
+ *         description: A successful response
+ *       400:
+ *         description: Bad request
+ */
+router.get("/my-average", AuthMiddelwares_1.onlyTeachersAndStudents, getMyAverageGrade);
 exports.default = router;

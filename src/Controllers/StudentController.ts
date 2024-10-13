@@ -1,4 +1,4 @@
-import { createStudentService} from "../Services/StudentService";
+import { createStudentService, getMyStudentsService} from "../Services/StudentService";
 import { RequestWithToken} from "../Types/Interfaces/dto/reqDto"
 import {Request, Response} from "express"
 
@@ -12,6 +12,18 @@ const register = async (req: Request, res: Response) => {
         res.status(500).json({message: "could not create user", 'error': error.message})
     }
 }
+
+const getMyAverageGrade = async (req: RequestWithToken, res: Response): Promise<void> => {
+    try {
+        
+        const user_id = req.user.userId
+        const data = await getMyStudentsService( user_id)
+        res.status(200).json({error: false, message: "success getting average grade", data})
+    } catch (error) {
+        res.status(500).json({message: "could not get average grade", 'error': error})
+    }
+}
 export {
-    register
+    register,
+    getMyAverageGrade
 }
