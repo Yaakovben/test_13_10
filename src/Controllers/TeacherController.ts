@@ -6,7 +6,8 @@ import {
     getMyStudentsService, 
     addGradeService, 
     updateGradeService, 
-    getClassAverageGradeService
+    getClassAverageGradeService,
+    getStudentGradesService
     } from "../Services/TeacherService"
 
 const register = async (req: Request, res: Response) : Promise<void> => {
@@ -52,6 +53,9 @@ const updateGrade = async (req: RequestWithToken, res: Response) => {
         const teacher_id = req.user.userId
         const test_id = req.params.id
         const dto: gradeDto = req.body
+        if (!test_id) {
+            throw new Error('test id is required')
+        }
         console.log(dto)
         const data = await updateGradeService(teacher_id, test_id, dto)
         res.status(201).json({error: false, message: "success updating grade", data})
@@ -72,11 +76,26 @@ const getClassAverageGrade = async (req: RequestWithToken, res: Response) => {
     }
 }
 
+
+const getStudentGrades = async (req: RequestWithToken, res: Response) => {
+    try {
+        const student_id = req.params.id
+        if (!student_id) {
+            throw new Error('student id is required')
+        }
+        const data = await getStudentGradesService(student_id)
+        res.status(200).json({error: false, message: "success getting student grades", data})
+    } catch (error: any) {
+        console.log(error)
+        res.status(500).json({message: "could not getting student grades", 'error': error.message})
+    }
+}
 export {
     register,
     getMyStudents,
     addGrade,
     updateGrade,
-    getClassAverageGrade
+    getClassAverageGrade,
+    getStudentGrades
 }
 

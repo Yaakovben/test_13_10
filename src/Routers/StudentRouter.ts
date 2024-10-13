@@ -1,7 +1,7 @@
 import express from "express";
 import {register} from "../Controllers/StudentController";
-const{getMyAverageGrade} = require("../Controllers/StudentController")
-import {onlyTeachersAndStudents} from "../Midllewares/AuthMiddelwares";
+const{getMyAverageGrade, getMyGrades} = require("../Controllers/StudentController")
+import {onlyStudents} from "../Midllewares/AuthMiddelwares";
 const router = express.Router();
 
 
@@ -56,11 +56,26 @@ router.post("/register", register)
  *     tags:   
  *       - Student
  *     responses:
- *       201:
+ *       200:
  *         description: A successful response
  *       400:
  *         description: Bad request
  */
 
-router.get("/my-average", onlyTeachersAndStudents, getMyAverageGrade)
+router.get("/my-average", onlyStudents, getMyAverageGrade)
+
+/**
+ * @swagger
+ * /students/my-grades:
+ *   get:
+ *     summary: Get my all grades
+ *     tags:   
+ *       - Student
+ *     responses:
+ *       200:
+ *         description: A successful response
+ *       400:
+ *         description: Bad request
+ */
+router.get("/my-grades", onlyStudents, getMyGrades)
 export default router;

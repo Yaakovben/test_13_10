@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onlyTeachersAndStudents = exports.onlyTeachers = void 0;
+exports.onlyStudents = exports.onlyTeachers = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const TeacherModel_1 = require("../Models/TeacherModel");
 require("dotenv/config");
@@ -39,7 +39,7 @@ const onlyTeachers = async (request, res, next) => {
     }
 };
 exports.onlyTeachers = onlyTeachers;
-const onlyTeachersAndStudents = async (request, res, next) => {
+const onlyStudents = async (request, res, next) => {
     try {
         const req = request;
         const token = req.cookies.token;
@@ -48,9 +48,8 @@ const onlyTeachersAndStudents = async (request, res, next) => {
             return;
         }
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        console.log(decoded);
-        if (decoded.role != "teacher" && decoded.role != "student") {
-            res.status(401).json({ message: "only students and teachers are allowed to perform this action" });
+        if (decoded.role != "student") {
+            res.status(401).json({ message: "only students are allowed to perform this action" });
             return;
         }
         if (decoded.exp && Date.now() >= decoded.exp * 1000) {
@@ -70,4 +69,4 @@ const onlyTeachersAndStudents = async (request, res, next) => {
         res.status(401).json({ message: "Unauthorized", 'error': true, "details": error.message });
     }
 };
-exports.onlyTeachersAndStudents = onlyTeachersAndStudents;
+exports.onlyStudents = onlyStudents;

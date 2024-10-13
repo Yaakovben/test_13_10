@@ -36,7 +36,7 @@ const createStudentService = async (user: NewUserDto) => {
     }
 } 
 
-const getMyStudentsService = async (student_id: string): Promise<any> => {
+const getMyAverageService = async (student_id: string): Promise<any> => {
     try {
 
         const student = await StudentModel.findById(student_id)
@@ -63,7 +63,22 @@ const getMyStudentsService = async (student_id: string): Promise<any> => {
 }
 
 
+const getMyGradesService = async (student_id: string): Promise<any> => {
+    try {
+        const student = await StudentModel.findById(student_id)
+        if (!student) {
+            throw new Error("Student not found")
+        }
+        return student.grades
+    }
+    catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
 export { 
     createStudentService,
-    getMyStudentsService
+    getMyAverageService,
+    getMyGradesService
  }

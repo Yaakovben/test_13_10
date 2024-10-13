@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getClassAverageGradeService = exports.updateGradeService = exports.addGradeService = exports.getMyStudentsService = exports.createTeacher = void 0;
+exports.getStudentGradesService = exports.getClassAverageGradeService = exports.updateGradeService = exports.addGradeService = exports.getMyStudentsService = exports.createTeacher = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const TeacherModel_1 = require("../Models/TeacherModel");
 const StudentModel_1 = require("../Models/StudentModel");
@@ -76,8 +76,11 @@ const addGradeService = async (teacher_id, student_id, dto) => {
 exports.addGradeService = addGradeService;
 const updateGradeService = async (teacher_id, test_id, dto) => {
     try {
+        if (!dto) {
+            throw new Error('grade is required');
+        }
         const { grade } = dto;
-        if (!grade) {
+        if (grade === undefined) {
             throw new Error("Grade is required");
         }
         const student = await StudentModel_1.StudentModel.findOne({ grades: { $elemMatch: { _id: test_id } } });
@@ -137,3 +140,17 @@ const getClassAverageGradeService = async (class_id) => {
     }
 };
 exports.getClassAverageGradeService = getClassAverageGradeService;
+const getStudentGradesService = async (student_id) => {
+    try {
+        const student = await StudentModel_1.StudentModel.findById(student_id);
+        if (!student) {
+            throw new Error("Student not found");
+        }
+        return student.grades;
+    }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+exports.getStudentGradesService = getStudentGradesService;

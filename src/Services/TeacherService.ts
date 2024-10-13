@@ -73,8 +73,11 @@ const addGradeService = async (teacher_id: string, student_id: string, dto: grad
 
 const updateGradeService = async (teacher_id: string, test_id: string, dto: gradeDto) => {
     try {
+        if (!dto) {
+            throw new Error('grade is required')
+        }
         const {grade} = dto
-        if (!grade) {
+        if (grade === undefined) {
             throw new Error("Grade is required")
         }
         const student = await StudentModel.findOne({grades: {$elemMatch: {_id: test_id}}})
@@ -138,10 +141,24 @@ const getClassAverageGradeService = async (class_id: string) => {
 }
 
 
+const getStudentGradesService = async (student_id: string) => {
+    try {
+        const student = await StudentModel.findById(student_id)
+        if (!student) {
+            throw new Error("Student not found")
+        }
+        return student.grades
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
 export {
     createTeacher,
     getMyStudentsService,
     addGradeService,
     updateGradeService,
-    getClassAverageGradeService
+    getClassAverageGradeService,
+    getStudentGradesService
 }

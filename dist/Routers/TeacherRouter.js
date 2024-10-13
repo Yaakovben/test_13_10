@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const { register, getMyStudents, addGrade, updateGrade, getClassAverageGrade } = require("../Controllers/TeacherController");
+const { register, getMyStudents, addGrade, updateGrade, getClassAverageGrade, getStudentGrades } = require("../Controllers/TeacherController");
 const AuthMiddelwares_1 = require("../Midllewares/AuthMiddelwares");
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
@@ -148,4 +148,25 @@ router.patch("/update-grade/:id", AuthMiddelwares_1.onlyTeachers, updateGrade);
  *         description: Bad request
  */
 router.get("/class-average", AuthMiddelwares_1.onlyTeachers, getClassAverageGrade);
+/**
+ * @swagger
+ * /teachers/get-student-grades/{id}:
+ *   get:
+ *     summary: Get specific student grades
+ *     tags:
+ *       - Teacher
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the student to get graded
+ *     responses:
+ *       200:
+ *         description: A successful response
+ *       400:
+ *         description: Bad request
+ */
+router.get("/get-student-grades/:id", AuthMiddelwares_1.onlyTeachers, getStudentGrades);
 exports.default = router;

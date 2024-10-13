@@ -43,7 +43,7 @@ const onlyTeachers = async (request: RequestWithToken| Request, res: Response , 
 }
 
 
-const onlyTeachersAndStudents = async (request: RequestWithToken | Request, res: Response , next: NextFunction): Promise<void> => {
+const onlyStudents = async (request: RequestWithToken | Request, res: Response , next: NextFunction): Promise<void> => {
     try {
         const req = request as RequestWithToken
         const token = req.cookies.token
@@ -52,10 +52,9 @@ const onlyTeachersAndStudents = async (request: RequestWithToken | Request, res:
              return
         }
 
-        const decoded  = jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload
-        console.log(decoded)
-        if(decoded.role != "teacher" && decoded.role != "student") {
-             res.status(401).json({message: "only students and teachers are allowed to perform this action"})
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload
+        if(decoded.role != "student") {
+             res.status(401).json({message: "only students are allowed to perform this action"})
              return
         }
 
@@ -82,5 +81,5 @@ const onlyTeachersAndStudents = async (request: RequestWithToken | Request, res:
 
 export {
     onlyTeachers,
-    onlyTeachersAndStudents
+    onlyStudents
 }   

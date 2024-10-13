@@ -1,4 +1,4 @@
-const { register, getMyStudents, addGrade, updateGrade, getClassAverageGrade } = require("../Controllers/TeacherController");
+const { register, getMyStudents, addGrade, updateGrade, getClassAverageGrade, getStudentGrades } = require("../Controllers/TeacherController");
 import { onlyTeachers } from "../Midllewares/AuthMiddelwares";
 import express from "express";
 
@@ -155,4 +155,26 @@ router.patch("/update-grade/:id",onlyTeachers , updateGrade)
  */
 router.get("/class-average",onlyTeachers,  getClassAverageGrade)
 
+
+/**
+ * @swagger
+ * /teachers/get-student-grades/{id}:    
+ *   get:
+ *     summary: Get specific student grades
+ *     tags:   
+ *       - Teacher
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the student to get graded
+ *     responses:
+ *       200:
+ *         description: A successful response
+ *       400:
+ *         description: Bad request
+ */
+router.get("/get-student-grades/:id",onlyTeachers,  getStudentGrades)
 export default router;

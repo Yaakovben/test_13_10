@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getClassAverageGrade = exports.updateGrade = exports.addGrade = exports.getMyStudents = exports.register = void 0;
+exports.getStudentGrades = exports.getClassAverageGrade = exports.updateGrade = exports.addGrade = exports.getMyStudents = exports.register = void 0;
 const TeacherService_1 = require("../Services/TeacherService");
 const register = async (req, res) => {
     try {
@@ -45,6 +45,9 @@ const updateGrade = async (req, res) => {
         const teacher_id = req.user.userId;
         const test_id = req.params.id;
         const dto = req.body;
+        if (!test_id) {
+            throw new Error('test id is required');
+        }
         console.log(dto);
         const data = await (0, TeacherService_1.updateGradeService)(teacher_id, test_id, dto);
         res.status(201).json({ error: false, message: "success updating grade", data });
@@ -67,3 +70,18 @@ const getClassAverageGrade = async (req, res) => {
     }
 };
 exports.getClassAverageGrade = getClassAverageGrade;
+const getStudentGrades = async (req, res) => {
+    try {
+        const student_id = req.params.id;
+        if (!student_id) {
+            throw new Error('student id is required');
+        }
+        const data = await (0, TeacherService_1.getStudentGradesService)(student_id);
+        res.status(200).json({ error: false, message: "success getting student grades", data });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "could not getting student grades", 'error': error.message });
+    }
+};
+exports.getStudentGrades = getStudentGrades;
