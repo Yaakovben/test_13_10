@@ -32,7 +32,7 @@ const addGrade = async (req, res) => {
         const dto = req.body;
         console.log(dto);
         const data = await (0, TeacherService_1.addGradeService)(teacher_id, student_id, dto);
-        res.status(200).json({ error: false, message: "success adding grade", data });
+        res.status(201).json({ error: false, message: "success adding grade", data });
     }
     catch (error) {
         console.log(error);

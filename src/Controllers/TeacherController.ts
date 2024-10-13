@@ -41,7 +41,7 @@ const addGrade = async (req: RequestWithToken, res: Response): Promise<void> => 
         const dto: gradeDto = req.body
         console.log(dto)
         const data = await addGradeService(teacher_id, student_id, dto)
-        res.status(200).json({error: false, message: "success adding grade", data})
+        res.status(201).json({error: false, message: "success adding grade", data})
     } catch (error: any) {
         console.log(error)
         res.status(500).json({message: "could not adding grade", 'error': error.message})
