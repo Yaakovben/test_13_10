@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateGrade = exports.addGrade = exports.getMyStudents = exports.register = void 0;
+exports.getClassAverageGrade = exports.updateGrade = exports.addGrade = exports.getMyStudents = exports.register = void 0;
 const TeacherService_1 = require("../Services/TeacherService");
 const register = async (req, res) => {
     try {
@@ -55,3 +55,15 @@ const updateGrade = async (req, res) => {
     }
 };
 exports.updateGrade = updateGrade;
+const getClassAverageGrade = async (req, res) => {
+    try {
+        const class_id = req.user.class_id;
+        const data = await (0, TeacherService_1.getClassAverageGradeService)(class_id);
+        res.status(200).json({ error: false, message: "success getting class average grade", data });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "could not getting class average grade", 'error': error.message });
+    }
+};
+exports.getClassAverageGrade = getClassAverageGrade;

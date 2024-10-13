@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import {Iteacher, TeacherModel} from "../Models/TeacherModel"
 import { Istudent, StudentModel } from "../Models/StudentModel"
 import { ObjectId } from "mongoose"
+import mongoose from "mongoose"
 
 const createTeacher = async (user: NewUserDto) => {
     try {
@@ -96,9 +97,47 @@ const updateGradeService = async (teacher_id: string, test_id: string, dto: grad
     }
 }
 
+
+const getClassAverageGradeService = async (class_id: string) => {
+    try {
+        const students = await StudentModel.find({class_ref: class_id})
+        if (!students) {
+            throw new Error("No students found")
+        }
+        // const average = students.reduce((acc, student) => acc + student.grades.reduce((acc, grade) => acc + grade.grade, 0) / student.grades.length, 0)
+        // const studentAverage = average / students.length
+        const average = await StudentModel.aggregate(
+            [
+              { "$match": { "class_ref": new mongoose.Types.ObjectId(class_id) } },
+              { "$unwind": "$grades" },
+              { "$group": { "_id": "$_id", "user_name": { "$first": "$user_name" }, "average_grade": { "$avg": "$grades.grade" } } },
+              { "$project": { "_id": 0, "user_name": 1, "average_grade": { "$round": ["$average_grade", 1]  } }}
+            ]
+            )
+
+        const generalAverage = await StudentModel.aggregate(
+            [
+              { $unwind: '$grades' },
+              {
+                $group: {
+                  _id: '$class_ref',
+                  avg_grade: { $avg: '$grades.grade' }
+                }
+              },
+              {"$project": { "_id": 0, "general_grade": { "$round": ["$avg_grade", 1]  } }}
+            ])
+        return {generalAverage, "average per student": average}
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+
 export {
     createTeacher,
     getMyStudentsService,
     addGradeService,
-    updateGradeService
+    updateGradeService,
+    getClassAverageGradeService
 }
