@@ -6,7 +6,7 @@ import { StudentModel } from "../Models/StudentModel"
 import "dotenv/config"
 import TokenPayload from "../Types/Interfaces/tokenPayload"
 
-const teacherLogin = async (user: LoginDto) => {
+const LoginService = async (user: LoginDto) => {
     try {
 
         const { user_name, password } = user
@@ -14,6 +14,30 @@ const teacherLogin = async (user: LoginDto) => {
         if (!user_name || !password) {
             throw new Error("All fields are required")
         }
+        const isTeacher = await TeacherModel.findOne({ user_name: user.user_name })
+
+        if (isTeacher) {
+            return await teacherLogin(user)
+        }
+        else {
+            const isStudent = await StudentModel.findOne({ user_name: user.user_name })
+
+            if (isStudent) {
+               return await studentLoginService(user)
+            }
+            else {
+                throw new Error("User not found")
+            }
+        }
+
+        
+    } catch (error) {
+        throw error
+    }
+}
+
+const teacherLogin = async (user: LoginDto) => {
+    try {
 
         const dbUser = await TeacherModel.findOne({ user_name: user.user_name })
         if (!dbUser) {
@@ -44,10 +68,7 @@ const teacherLogin = async (user: LoginDto) => {
 
 const studentLoginService = async (user: LoginDto) => {
     try {
-        const { user_name, password } = user
-        if (!user_name || !password) {
-            throw new Error("All fields are required")
-        }
+
         const dbUser = await StudentModel.findOne({ user_name: user.user_name })
         if (!dbUser) {
             throw new Error("Student not found")
@@ -64,6 +85,5 @@ const studentLoginService = async (user: LoginDto) => {
 }
 
 export {
-    teacherLogin,
-    studentLoginService
+    LoginService
 }
