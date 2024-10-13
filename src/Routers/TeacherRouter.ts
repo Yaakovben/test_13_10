@@ -1,4 +1,4 @@
-const { register, getMyStudents, addGrade } = require("../Controllers/TeacherController");
+const { register, getMyStudents, addGrade, updateGrade } = require("../Controllers/TeacherController");
 import { onlyTeachers } from "../Midllewares/AuthMiddelwares";
 import express from "express";
 
@@ -102,5 +102,41 @@ router.get("/my-students",onlyTeachers,  getMyStudents)
  *         description: Bad request
  */
 router.patch("/add-grade/:id",onlyTeachers , addGrade)
+
+/**
+ * @swagger
+ * /teachers/update-grade/{id}:
+ *   patch:
+ *     summary: Update a grade
+ *     tags:   
+ *       - Teacher
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the test to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               grade:
+ *                 type: number
+ *             required:
+ *               - grade
+ *             example:
+ *               title: "math test"
+ *               grade: 90
+ *     responses:
+ *       200:
+ *         description: A successful response
+ *       400:
+ *         description: Bad request
+ */
+router.patch("/update-grade/:id",onlyTeachers , updateGrade)
 
 export default router;

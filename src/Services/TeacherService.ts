@@ -2,6 +2,7 @@ import { NewUserDto,gradeDto } from "../Types/Interfaces/dto/reqDto"
 import bcrypt from "bcrypt"
 import {Iteacher, TeacherModel} from "../Models/TeacherModel"
 import { Istudent, StudentModel } from "../Models/StudentModel"
+import { ObjectId } from "mongoose"
 
 const createTeacher = async (user: NewUserDto) => {
     try {
@@ -65,8 +66,39 @@ const addGradeService = async (teacher_id: string, student_id: string, dto: grad
     }
 }
 
+const updateGradeService = async (teacher_id: string, test_id: string, dto: gradeDto) => {
+    try {
+        const {grade} = dto
+        if (!grade) {
+            throw new Error("Grade is required")
+        }
+        const student = await StudentModel.findOne({grades: {$elemMatch: {_id: test_id}}})
+        if (!student) {
+            throw new Error("Test not found")
+        }
+        const teacher = await TeacherModel.findById(teacher_id)
+        if (!teacher) {
+            throw new Error("Teacher not found")
+        }
+        if (student.class_ref.toString() !== teacher_id) {
+            throw new Error("Test and teacher are not in the same class")
+        }
+        const test = student.grades.find(grade => (grade._id as ObjectId).toString() === test_id)
+        if (!test) {
+            throw new Error("Test not found")
+        }
+        test.grade = grade
+        await student.save()
+        return test
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
 export {
     createTeacher,
     getMyStudentsService,
-    addGradeService
+    addGradeService,
+    updateGradeService
 }

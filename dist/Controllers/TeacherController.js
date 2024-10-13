@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addGrade = exports.getMyStudents = exports.register = void 0;
+exports.updateGrade = exports.addGrade = exports.getMyStudents = exports.register = void 0;
 const TeacherService_1 = require("../Services/TeacherService");
 const register = async (req, res) => {
     try {
@@ -40,3 +40,18 @@ const addGrade = async (req, res) => {
     }
 };
 exports.addGrade = addGrade;
+const updateGrade = async (req, res) => {
+    try {
+        const teacher_id = req.user.userId;
+        const test_id = req.params.id;
+        const dto = req.body;
+        console.log(dto);
+        const data = await (0, TeacherService_1.updateGradeService)(teacher_id, test_id, dto);
+        res.status(201).json({ error: false, message: "success updating grade", data });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "could not updating grade", 'error': error.message });
+    }
+};
+exports.updateGrade = updateGrade;

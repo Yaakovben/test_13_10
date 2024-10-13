@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addGradeService = exports.getMyStudentsService = exports.createTeacher = void 0;
+exports.updateGradeService = exports.addGradeService = exports.getMyStudentsService = exports.createTeacher = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const TeacherModel_1 = require("../Models/TeacherModel");
 const StudentModel_1 = require("../Models/StudentModel");
@@ -69,3 +69,34 @@ const addGradeService = async (teacher_id, student_id, dto) => {
     }
 };
 exports.addGradeService = addGradeService;
+const updateGradeService = async (teacher_id, test_id, dto) => {
+    try {
+        const { grade } = dto;
+        if (!grade) {
+            throw new Error("Grade is required");
+        }
+        const student = await StudentModel_1.StudentModel.findOne({ grades: { $elemMatch: { _id: test_id } } });
+        if (!student) {
+            throw new Error("Test not found");
+        }
+        const teacher = await TeacherModel_1.TeacherModel.findById(teacher_id);
+        if (!teacher) {
+            throw new Error("Teacher not found");
+        }
+        if (student.class_ref.toString() !== teacher_id) {
+            throw new Error("Test and teacher are not in the same class");
+        }
+        const test = student.grades.find(grade => grade._id.toString() === test_id);
+        if (!test) {
+            throw new Error("Test not found");
+        }
+        test.grade = grade;
+        await student.save();
+        return test;
+    }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+exports.updateGradeService = updateGradeService;

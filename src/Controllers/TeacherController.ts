@@ -1,4 +1,4 @@
-import {createTeacher, getMyStudentsService, addGradeService} from "../Services/TeacherService"
+import {createTeacher, getMyStudentsService, addGradeService,updateGradeService} from "../Services/TeacherService"
 import {Request, Response} from "express"
 import { gradeDto, RequestWithToken } from "../Types/Interfaces/dto/reqDto"
 
@@ -40,9 +40,24 @@ const addGrade = async (req: RequestWithToken, res: Response) => {
     }
 }
 
+const updateGrade = async (req: RequestWithToken, res: Response) => {
+    try {
+        const teacher_id = req.user.userId
+        const test_id = req.params.id
+        const dto: gradeDto = req.body
+        console.log(dto)
+        const data = await updateGradeService(teacher_id, test_id, dto)
+        res.status(201).json({error: false, message: "success updating grade", data})
+    } catch (error: any) {
+        console.log(error)
+        res.status(500).json({message: "could not updating grade", 'error': error.message})
+    }
+}
+
 export {
     register,
     getMyStudents,
-    addGrade
+    addGrade,
+    updateGrade
 }
 
