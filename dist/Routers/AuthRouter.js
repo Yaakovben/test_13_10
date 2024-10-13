@@ -10,7 +10,7 @@ const router = express_1.default.Router();
  * @swagger
  * /auth/login:
  *   post:
- *     summary: Login a teacher
+ *     summary: Login a teacher or student
  *     tags:
  *       - Auth
  *     requestBody:

@@ -10,7 +10,7 @@ const router = express.Router();
  * @swagger
  * /students/register:
  *   post:
- *     summary: Register a user
+ *     summary: Register a new student
  *     tags:   
  *       - Student
  *     requestBody:

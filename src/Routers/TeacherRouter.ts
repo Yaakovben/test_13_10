@@ -8,7 +8,7 @@ const router = express.Router();
  * @swagger
  * /teachers/register:
  *   post:
- *     summary: Register a user
+ *     summary: Register a new teacher
  *     tags:   
  *       - Teacher
  *     requestBody:
