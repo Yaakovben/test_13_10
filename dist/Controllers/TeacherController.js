@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setSettings = exports.getUsers = exports.register = void 0;
+exports.setSettings = exports.getMyStudents = exports.register = void 0;
 const TeacherService_1 = require("../Services/TeacherService");
 const register = async (req, res) => {
     try {
@@ -14,16 +14,17 @@ const register = async (req, res) => {
     }
 };
 exports.register = register;
-const getUsers = async (req, res) => {
+const getMyStudents = async (req, res) => {
     try {
-        const data = await (0, TeacherService_1.getAllUsers)();
+        const class_id = req.user.class_id;
+        const data = await (0, TeacherService_1.getMyStudentsService)(class_id);
         res.status(200).json({ error: false, message: "success getting users", data });
     }
     catch (error) {
         res.status(500).json({ message: "could not get users", 'error': error });
     }
 };
-exports.getUsers = getUsers;
+exports.getMyStudents = getMyStudents;
 const setSettings = async (req, res) => {
     try {
     }

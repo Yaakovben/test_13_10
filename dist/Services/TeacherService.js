@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllUsers = exports.createTeacher = void 0;
+exports.getMyStudentsService = exports.createTeacher = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const TeacherModel_1 = require("../Models/TeacherModel");
+const StudentModel_1 = require("../Models/StudentModel");
 const createTeacher = async (user) => {
     try {
         console.log(user);
@@ -25,17 +26,17 @@ const createTeacher = async (user) => {
     }
 };
 exports.createTeacher = createTeacher;
-const getAllUsers = async () => {
+const getMyStudentsService = async (class_id) => {
     try {
-        const users = await TeacherModel_1.TeacherModel.find({});
-        if (!users) {
-            throw new Error("No teachers found");
+        const students = await StudentModel_1.StudentModel.find({ class_ref: class_id });
+        if (!students) {
+            throw new Error("No students found");
         }
-        return users;
+        return students;
     }
     catch (error) {
         console.log(error);
         throw error;
     }
 };
-exports.getAllUsers = getAllUsers;
+exports.getMyStudentsService = getMyStudentsService;

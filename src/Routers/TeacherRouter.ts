@@ -1,4 +1,5 @@
-const { register, getUsers, setSettings } = require("../Controllers/TeacherController");
+const { register, getMyStudents, setSettings } = require("../Controllers/TeacherController");
+import { onlyTeachers } from "../Midllewares/AuthMiddelwares";
 import express from "express";
 
 const router = express.Router();
@@ -48,11 +49,11 @@ router.post("/register", register)
 
 /**
  * @swagger
- * /users:
+ * /teachers/my-students:
  *   get:
- *     summary: Get all users
+ *     summary: Get all students for the teacher
  *     tags:   
- *       - User
+ *       - Teacher
  *     responses:
  *       200:
  *         description: A successful response
@@ -60,7 +61,7 @@ router.post("/register", register)
  *         description: Bad request
  */
 
-router.get("/", getUsers)
+router.get("/my-students",onlyTeachers,  getMyStudents)
 
 router.patch("/settings", setSettings)
 

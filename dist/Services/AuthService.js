@@ -23,7 +23,14 @@ const teacherLogin = async (user) => {
         if (!isMatch) {
             throw new Error("Invalid password");
         }
-        const token = jsonwebtoken_1.default.sign({ userId: dbUser._id, user_name: dbUser.user_name, role: "teacher", class_id: dbUser._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+        const payload = {
+            userId: dbUser._id,
+            user_name: dbUser.user_name,
+            class_name: dbUser.class_name,
+            role: "teacher",
+            class_id: dbUser._id
+        };
+        const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
         return token;
     }
     catch (error) {

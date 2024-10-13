@@ -26,6 +26,7 @@ const studentSchema = new mongoose_2.Schema({
         required: [true, "user name is required"],
         minlength: [3, "user name must be at least 3 characters"],
         trim: true,
+        unique: true
     },
     password: {
         type: String,
@@ -54,5 +55,7 @@ const studentSchema = new mongoose_2.Schema({
 }, {
     timestamps: true
 });
-const StudentModel = mongoose_1.default.model("post", studentSchema);
+studentSchema.index({ email: 1 }, { unique: true });
+studentSchema.index({ user_name: 1 }, { unique: true });
+const StudentModel = mongoose_1.default.model("student", studentSchema);
 exports.StudentModel = StudentModel;

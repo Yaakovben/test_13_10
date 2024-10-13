@@ -36,6 +36,7 @@ const studentSchema = new Schema<Istudent>({
         required: [true, "user name is required"],
         minlength: [3, "user name must be at least 3 characters"],
         trim: true,
+        unique: true
     },
     password: {
         type: String,
@@ -65,9 +66,9 @@ const studentSchema = new Schema<Istudent>({
     timestamps: true
     });
 
-
-const StudentModel = mongoose.model<Istudent>("post", studentSchema);
-
+studentSchema.index({ email: 1 }, { unique: true });
+studentSchema.index({ user_name: 1 }, { unique: true });
+const StudentModel = mongoose.model<Istudent>("student", studentSchema);
 
 
 export { StudentModel, Istudent, Itest}

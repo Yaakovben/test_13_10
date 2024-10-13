@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken"
-import {UserModel} from "../Models/TeacherModel"
+import {TeacherModel} from "../Models/TeacherModel"
 import{RequestWithToken} from "../Types/Interfaces/dto/reqDto"
 import { Request, Response, NextFunction } from "express";  
 import "dotenv/config"
 import TokenPayload from "../Types/Interfaces/tokenPayload";
+import { StudentModel } from "../Models/StudentModel";
 
-const onlyCommanders = async (request: RequestWithToken| Request, res: Response , next: NextFunction) : Promise<void> => {
+const onlyTeachers = async (request: RequestWithToken| Request, res: Response , next: NextFunction) : Promise<void> => {
     try {
         const req = request as RequestWithToken
         const token = req.cookies.token
@@ -15,8 +16,8 @@ const onlyCommanders = async (request: RequestWithToken| Request, res: Response 
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload
-        if(decoded.role != "commander") {
-             res.status(401).json({message: "only commanders are allowed to perform this action shtzchhhhhhhhhhhhhh...."})
+        if(decoded.role != "teacher") {
+             res.status(401).json({message: "only teachers are allowed to perform this action"})
              return
             }
 
@@ -25,7 +26,7 @@ const onlyCommanders = async (request: RequestWithToken| Request, res: Response 
               return
         }
 
-        const user = await UserModel.findOne({ user_name: decoded.user_name });
+        const user = await TeacherModel.findOne({ user_name: decoded.user_name });
         
         if (!user) {
             res.status(401).json({ message: "User no longer exists", error: true });
@@ -42,7 +43,7 @@ const onlyCommanders = async (request: RequestWithToken| Request, res: Response 
 }
 
 
-const onlySoldiersAndCommanders = async (request: RequestWithToken | Request, res: Response , next: NextFunction): Promise<void> => {
+const onlyTeachersAndStudents = async (request: RequestWithToken | Request, res: Response , next: NextFunction): Promise<void> => {
     try {
         const req = request as RequestWithToken
         const token = req.cookies.token
@@ -53,8 +54,8 @@ const onlySoldiersAndCommanders = async (request: RequestWithToken | Request, re
 
         const decoded  = jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload
         console.log(decoded)
-        if(decoded.role != "commander" && decoded.role != "soldier") {
-             res.status(401).json({message: "only soldiers and commanders are allowed to perform this action shtzchhhhhhhhhhhhhh...."})
+        if(decoded.role != "teacher" && decoded.role != "student") {
+             res.status(401).json({message: "only students and teachers are allowed to perform this action"})
              return
         }
 
@@ -63,7 +64,7 @@ const onlySoldiersAndCommanders = async (request: RequestWithToken | Request, re
               return
         }
 
-        const user = await UserModel.findOne({ user_name: decoded.user_name });
+        const user = await StudentModel.findOne({ user_name: decoded.user_name });
         
         if (!user) {
             res.status(401).json({ message: "User no longer exists", error: true });
@@ -80,6 +81,6 @@ const onlySoldiersAndCommanders = async (request: RequestWithToken | Request, re
 }
 
 export {
-    onlyCommanders,
-    onlySoldiersAndCommanders
+    onlyTeachers,
+    onlyTeachersAndStudents
 }   

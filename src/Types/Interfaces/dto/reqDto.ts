@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import TokenPayload from '../tokenPayload';
 
 interface NewUserDto {
     user_name: string;
@@ -19,9 +20,6 @@ interface gradeDto {
 
 
 interface RequestWithToken extends Request {
-    user?: {
-      userId: string;
-      role: string;
-    };
+    user: TokenPayload;
   }
 export {NewUserDto, gradeDto, RequestWithToken, LoginDto}

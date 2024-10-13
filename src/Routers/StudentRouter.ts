@@ -1,7 +1,7 @@
 import express from "express";
 import {register} from "../Controllers/StudentController";
 import {addTodo} from "../Controllers/TodoController";
-import {onlyCommanders, onlySoldiersAndCommanders} from "../Midllewares/AuthMiddelwares";
+import {onlyTeachersAndStudents} from "../Midllewares/AuthMiddelwares";
 const router = express.Router();
 
 

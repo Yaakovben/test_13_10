@@ -1,6 +1,7 @@
 import { NewUserDto } from "../Types/Interfaces/dto/reqDto"
 import bcrypt from "bcrypt"
 import {Iteacher, TeacherModel} from "../Models/TeacherModel"
+import { Istudent, StudentModel } from "../Models/StudentModel"
 
 const createTeacher = async (user: NewUserDto) => {
     try {
@@ -21,13 +22,14 @@ const createTeacher = async (user: NewUserDto) => {
 } 
 
 
-const getAllUsers = async (): Promise<Iteacher[]> => {
+const getMyStudentsService = async (class_id: string): Promise<Istudent[]> => {
     try {
-        const users = await TeacherModel.find({})
-        if (!users) {
-            throw new Error("No teachers found")
+
+        const students = await StudentModel.find({class_ref: class_id})
+        if (!students) {
+            throw new Error("No students found")
         }
-        return users
+        return students
     } catch (error) {
         console.log(error)
         throw error
@@ -36,5 +38,5 @@ const getAllUsers = async (): Promise<Iteacher[]> => {
 
 export {
     createTeacher,
-    getAllUsers
+    getMyStudentsService
 }

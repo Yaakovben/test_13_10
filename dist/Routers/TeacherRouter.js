@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const { register, getUsers, setSettings } = require("../Controllers/TeacherController");
+const { register, getMyStudents, setSettings } = require("../Controllers/TeacherController");
+const AuthMiddelwares_1 = require("../Midllewares/AuthMiddelwares");
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 /**
@@ -47,17 +48,17 @@ const router = express_1.default.Router();
 router.post("/register", register);
 /**
  * @swagger
- * /users:
+ * /teachers/my-students:
  *   get:
- *     summary: Get all users
+ *     summary: Get all students for the teacher
  *     tags:
- *       - User
+ *       - Teacher
  *     responses:
  *       200:
  *         description: A successful response
  *       400:
  *         description: Bad request
  */
-router.get("/", getUsers);
+router.get("/my-students", AuthMiddelwares_1.onlyTeachers, getMyStudents);
 router.patch("/settings", setSettings);
 exports.default = router;
