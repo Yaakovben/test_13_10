@@ -7,6 +7,10 @@ interface NewUserDto {
     class_name: string;
 }
 
+interface LoginDto {
+    user_name: string;
+    password: string;
+}
 
 interface gradeDto {
     title: string
@@ -20,4 +24,4 @@ interface RequestWithToken extends Request {
       role: string;
     };
   }
-export {NewUserDto, gradeDto, RequestWithToken}
+export {NewUserDto, gradeDto, RequestWithToken, LoginDto}

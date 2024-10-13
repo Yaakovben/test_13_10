@@ -8,9 +8,9 @@ const AuthController_1 = require("../Controllers/AuthController");
 const router = express_1.default.Router();
 /**
  * @swagger
- * /auth/login:
+ * /auth/teacher/login:
  *   post:
- *     summary: Login a user
+ *     summary: Login a teacher
  *     tags:
  *       - Auth
  *     requestBody:
@@ -34,6 +34,35 @@ const router = express_1.default.Router();
  *       200:
  *         description: A successful response
  */
-router.post("/login", AuthController_1.login);
+router.post("/teacher/login", AuthController_1.teacherLogin);
+/**
+ * @swagger
+ * /auth/student/login:
+ *   post:
+ *     summary: Login a student
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_name:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - user_name
+ *               - password
+ *           example:
+ *             user_name: "joni"
+ *             password: "1234"
+ *     responses:
+ *       200:
+ *         description: A successful response
+ */
+router.post("/student/login", AuthController_1.studentLogin);
 router.delete("/logout", AuthController_1.logout);
 exports.default = router;

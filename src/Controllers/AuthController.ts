@@ -1,11 +1,21 @@
-import { login as loginFromService } from "../Services/AuthService";
+import { teacherLogin as teacherLoginService, studentLoginService } from "../Services/AuthService";
 
 
 import { Request, Response } from "express"
 
-const login = async (req: Request, res: Response) => {
+const teacherLogin = async (req: Request, res: Response) => {
     try {
-        const token = await loginFromService(req.body)
+        const token = await teacherLoginService(req.body)
+        res.cookie("token", token).json({error: false, message: "login success"})
+        
+    } catch (error: any) {
+        res.status(500).json({message: "could not login", "error":true, "details":error.message})
+    }
+}
+
+const studentLogin = async (req: Request, res: Response) => {
+    try {
+        const token = await studentLoginService(req.body)
         res.cookie("token", token).json({error: false, message: "login success"})
         
     } catch (error: any) {
@@ -23,6 +33,7 @@ const logout = async (req: Request, res: Response) => {
 
 
 export {
-    login,
+    teacherLogin,
+    studentLogin,
     logout
 }
