@@ -1,6 +1,6 @@
-import {createTeacher, getMyStudentsService} from "../Services/TeacherService"
+import {createTeacher, getMyStudentsService, addGradeService} from "../Services/TeacherService"
 import {Request, Response} from "express"
-import { RequestWithToken } from "../Types/Interfaces/dto/reqDto"
+import { gradeDto, RequestWithToken } from "../Types/Interfaces/dto/reqDto"
 
 const register = async (req: Request, res: Response) => {
     try {
@@ -26,17 +26,23 @@ const getMyStudents = async (req: RequestWithToken, res: Response): Promise<void
 }
 
 
-const setSettings = async (req: Request, res: Response) => {
+const addGrade = async (req: RequestWithToken, res: Response) => {
     try {
-        
-    } catch (error) {
-        
+        const teacher_id = req.user.userId
+        const student_id = req.params.id
+        const dto: gradeDto = req.body
+        console.log(dto)
+        const data = await addGradeService(teacher_id, student_id, dto)
+        res.status(200).json({error: false, message: "success adding grade", data})
+    } catch (error: any) {
+        console.log(error)
+        res.status(500).json({message: "could not adding grade", 'error': error.message})
     }
 }
 
 export {
     register,
     getMyStudents,
-    setSettings
+    addGrade
 }
 

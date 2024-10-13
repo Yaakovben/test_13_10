@@ -1,4 +1,4 @@
-import { NewUserDto } from "../Types/Interfaces/dto/reqDto"
+import { NewUserDto,gradeDto } from "../Types/Interfaces/dto/reqDto"
 import bcrypt from "bcrypt"
 import {Iteacher, TeacherModel} from "../Models/TeacherModel"
 import { Istudent, StudentModel } from "../Models/StudentModel"
@@ -36,7 +36,37 @@ const getMyStudentsService = async (class_id: string): Promise<Istudent[]> => {
     }
 }
 
+const addGradeService = async (teacher_id: string, student_id: string, dto: gradeDto) => {
+    try {
+        const {title, grade} = dto
+        if (!title || !grade) {
+            throw new Error("All fields are required")
+        }
+        const student = await StudentModel.findById(student_id)
+        if (!student) {
+            throw new Error("Student not found")
+        }
+        const teacher = await TeacherModel.findById(teacher_id)
+        if (!teacher) {
+            throw new Error("Teacher not found")
+        }
+        if (student.class_ref.toString() !== teacher_id) {
+            throw new Error("Student and teacher are not in the same class")
+        }
+
+        const updatedStudent = await StudentModel.findByIdAndUpdate(student_id, {$push: {grades: dto}}, {new: true})
+        if (!updatedStudent) {
+            throw new Error("Student not updated")
+        }
+        return updatedStudent
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
 export {
     createTeacher,
-    getMyStudentsService
+    getMyStudentsService,
+    addGradeService
 }

@@ -15,11 +15,12 @@ interface LoginDto {
 
 interface gradeDto {
     title: string
-    score: number
+    grade: number
 }
 
 
 interface RequestWithToken extends Request {
     user: TokenPayload;
+
   }
 export {NewUserDto, gradeDto, RequestWithToken, LoginDto}

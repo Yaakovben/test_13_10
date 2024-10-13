@@ -4,7 +4,7 @@ import validator from "validator";
 
 interface Itest extends Document {
     title: string;
-    score: number;
+    grade: number;
 }
 
 interface Istudent extends Document {
@@ -13,7 +13,7 @@ interface Istudent extends Document {
     email: string;
     grade_average : number
     class_ref: ObjectId;
-    score: Itest[];
+    grades: Itest[];
 }
 
 const testSchema = new Schema<Itest>({
@@ -22,7 +22,7 @@ const testSchema = new Schema<Itest>({
         required: [true, "title is required"],
         minlength: [3, "title must be at least 3 characters"],
     },
-    score: {
+    grade: {
         type: Number,
         required: [true, "score is required"],
         min: [0, "score must be at least 0"],
@@ -58,7 +58,7 @@ const studentSchema = new Schema<Istudent>({
     grade_average : {
         type: Number
     },
-    score: {
+    grades: {
         type: [testSchema],
         default: []
     }
@@ -66,9 +66,9 @@ const studentSchema = new Schema<Istudent>({
     timestamps: true
     });
 
+    
 studentSchema.index({ email: 1 }, { unique: true });
 studentSchema.index({ user_name: 1 }, { unique: true });
 const StudentModel = mongoose.model<Istudent>("student", studentSchema);
-
 
 export { StudentModel, Istudent, Itest}

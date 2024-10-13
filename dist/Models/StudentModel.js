@@ -13,7 +13,7 @@ const testSchema = new mongoose_2.Schema({
         required: [true, "title is required"],
         minlength: [3, "title must be at least 3 characters"],
     },
-    score: {
+    grade: {
         type: Number,
         required: [true, "score is required"],
         min: [0, "score must be at least 0"],
@@ -48,7 +48,7 @@ const studentSchema = new mongoose_2.Schema({
     grade_average: {
         type: Number
     },
-    score: {
+    grades: {
         type: [testSchema],
         default: []
     }
