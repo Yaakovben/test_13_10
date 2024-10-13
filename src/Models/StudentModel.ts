@@ -11,6 +11,7 @@ interface Istudent extends Document {
     user_name: string;
     password: string;
     email: string;
+    grade_average : number
     class_ref: ObjectId;
     score: Itest[];
 }
@@ -47,6 +48,9 @@ const studentSchema = new Schema<Istudent>({
         validate: [validator.isEmail, "invalid email"],
         trim: true,
         unique: true
+    },
+    grade_average : {
+        type: Number
     },
     class_ref: {
         type: mongoose.Schema.Types.ObjectId,

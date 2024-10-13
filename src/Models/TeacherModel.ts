@@ -37,6 +37,7 @@ const teacherSchema = new Schema<Iteacher>({
         type: String,
         required: [true, "class name is required"],
         minlength: [3, "class name must be at least 3 characters"],
+        unique: true
     },
     students: {
         type: [mongoose.Schema.Types.ObjectId],
@@ -48,9 +49,9 @@ const teacherSchema = new Schema<Iteacher>({
 timestamps: true
 });
 
-// יצירת אינדקס ייחודי על שדה האימייל
+//  יצירת אינדקס ייחודי על שדה האימייל והכיתה
 teacherSchema.index({ email: 1 }, { unique: true });
-
+teacherSchema.index({ class_name: 1 }, { unique: true });
 
 const TeacherModel = mongoose.model<Iteacher>("teacher", teacherSchema);
 
