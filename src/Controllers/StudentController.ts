@@ -6,10 +6,11 @@ import {Request, Response} from "express"
 const register = async (req: Request, res: Response) => {
     try {
         const data = await createStudentService(req.body)
-        res.status(201).json({error: false, message: "User Created", data})
-    } catch (error: any) {
-        console.log(error)
-        res.status(500).json({message: "could not create user", 'error': error.message})
+        res.status(201).json({err: false, message: "User Created 👌", data})
+        console.log("Student Created 👌")
+    } catch (err: any) {
+        console.log(err)
+        res.status(500).json({message: "could not create user 😔", 'err': err.message})
     }
 }
 

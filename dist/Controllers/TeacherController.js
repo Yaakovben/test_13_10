@@ -5,12 +5,12 @@ const TeacherService_1 = require("../Services/TeacherService");
 const register = async (req, res) => {
     try {
         const data = await (0, TeacherService_1.createTeacher)(req.body);
-        res.status(201).json({ error: false, message: "User Created", data });
-        console.log("user created");
+        res.status(201).json({ error: false, message: "User Created 👌", data });
+        console.log("Teacher Created 👌");
     }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "could not create user", 'error': error.message });
+    catch (err) {
+        console.log(err, "could not create user 😔");
+        res.status(500).json({ message: "could not create user 😔", 'err': err.message });
     }
 };
 exports.register = register;
@@ -18,10 +18,11 @@ const getMyStudents = async (req, res) => {
     try {
         const class_id = req.user.class_id;
         const data = await (0, TeacherService_1.getMyStudentsService)(class_id);
-        res.status(200).json({ error: false, message: "success getting users", data });
+        res.status(200).json({ err: false, message: "success getting users 👌", data });
+        console.log("This Your sstodents 👌");
     }
-    catch (error) {
-        res.status(500).json({ message: "could not get users", 'error': error });
+    catch (err) {
+        res.status(500).json({ message: "could not get users 😔", 'err': err });
     }
 };
 exports.getMyStudents = getMyStudents;
@@ -32,11 +33,11 @@ const addGrade = async (req, res) => {
         const dto = req.body;
         console.log(dto);
         const data = await (0, TeacherService_1.addGradeService)(teacher_id, student_id, dto);
-        res.status(201).json({ error: false, message: "success adding grade", data });
+        res.status(201).json({ error: false, message: "success adding grade 👌", data });
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "could not adding grade", 'error': error.message });
+        res.status(500).json({ message: "could not adding grade 😔", 'error': error.message });
     }
 };
 exports.addGrade = addGrade;
@@ -52,9 +53,9 @@ const updateGrade = async (req, res) => {
         const data = await (0, TeacherService_1.updateGradeService)(teacher_id, test_id, dto);
         res.status(201).json({ error: false, message: "success updating grade", data });
     }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "could not updating grade", 'error': error.message });
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "could not updating grade", 'err': err.message });
     }
 };
 exports.updateGrade = updateGrade;

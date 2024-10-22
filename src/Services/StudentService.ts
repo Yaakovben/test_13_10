@@ -10,29 +10,27 @@ import { NewUserDto } from "../Types/Interfaces/dto/reqDto"
 
 const createStudentService = async (user: NewUserDto) => {
     try {
-        console.log(user)
         const{user_name, password, email , class_name} = user
         if (!user_name || !password || !email || !class_name) {
-            throw new Error("All fields are required");
+            throw new Error("All fields are required !!!");
         }
         const user_nameExists = await TeacherModel.findOne({user_name}).exec();
         if (user_nameExists) {
-            throw new Error("user name is not available");
+            throw new Error("user name is not available !!!");
         }
         const classExists = await TeacherModel.findOne({class_name}).exec();
         if (!classExists) {
-            throw new Error("class name not found");
+            throw new Error("class name not found !!!");
         }
         const hashedPassword = await bcrypt.hash(password, 10)
         const class_ref = (classExists._id as ObjectId)
         const dbUser = new StudentModel({user_name, password: hashedPassword,email, class_ref})
-        
         await dbUser.save()
-        console.log("student added")
+        console.log("student created from service 👌")
         return dbUser      
-    } catch (error) {
-        console.log(error)
-        throw error
+    } catch (err) {
+        console.log(err)
+        throw err
     }
 } 
 

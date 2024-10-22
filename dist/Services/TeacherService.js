@@ -10,10 +10,9 @@ const StudentModel_1 = require("../Models/StudentModel");
 const mongoose_1 = __importDefault(require("mongoose"));
 const createTeacher = async (user) => {
     try {
-        console.log(user);
         const { user_name, password, email, class_name } = user;
         if (!user_name || !password || !email || !class_name) {
-            throw new Error("All fields are required");
+            throw new Error("All fields are required !!!");
         }
         const user_nameExists = await StudentModel_1.StudentModel.findOne({ user_name }).exec();
         if (user_nameExists) {
@@ -22,12 +21,12 @@ const createTeacher = async (user) => {
         const hashedPassword = await bcrypt_1.default.hash(password, 10);
         const dbUser = new TeacherModel_1.TeacherModel({ user_name, password: hashedPassword, email, class_name });
         await dbUser.save();
-        console.log("teacher added");
+        console.log("teacher Created from Service");
         return dbUser;
     }
-    catch (error) {
-        console.log(error);
-        throw error;
+    catch (err) {
+        console.log(err);
+        throw err;
     }
 };
 exports.createTeacher = createTeacher;
@@ -35,13 +34,14 @@ const getMyStudentsService = async (class_id) => {
     try {
         const students = await StudentModel_1.StudentModel.find({ class_ref: class_id });
         if (!students) {
-            throw new Error("No students found");
+            throw new Error("No students found !!!");
         }
+        console.log("This Your sstodents from service 👌");
         return students;
     }
-    catch (error) {
-        console.log(error);
-        throw error;
+    catch (err) {
+        console.log(err);
+        throw err;
     }
 };
 exports.getMyStudentsService = getMyStudentsService;
@@ -49,11 +49,11 @@ const addGradeService = async (teacher_id, student_id, dto) => {
     try {
         const { title, grade } = dto;
         if (!title || !grade) {
-            throw new Error("All fields are required");
+            throw new Error("All fields are required !!!");
         }
         const student = await StudentModel_1.StudentModel.findById(student_id);
         if (!student) {
-            throw new Error("Student not found");
+            throw new Error("Student not found !!!");
         }
         const teacher = await TeacherModel_1.TeacherModel.findById(teacher_id);
         if (!teacher) {

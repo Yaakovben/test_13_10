@@ -13,12 +13,12 @@ const onlyTeachers = async (request, res, next) => {
         const req = request;
         const token = req.cookies.token;
         if (!token) {
-            res.status(401).json({ message: "No token provided", error: true });
+            res.status(401).json({ message: "No token provided😔", error: true });
             return;
         }
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         if (decoded.role != "teacher") {
-            res.status(401).json({ message: "only teachers are allowed to perform this action" });
+            res.status(401).json({ message: "only teachers are allowed to perform this action😔" });
             return;
         }
         if (decoded.exp && Date.now() >= decoded.exp * 1000) {

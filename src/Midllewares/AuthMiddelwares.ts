@@ -11,13 +11,13 @@ const onlyTeachers = async (request: RequestWithToken| Request, res: Response , 
         const req = request as RequestWithToken
         const token = req.cookies.token
         if (!token) {
-             res.status(401).json({ message: "No token provided", error: true });
+             res.status(401).json({ message: "No token provided😔", error: true });
              return
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload
         if(decoded.role != "teacher") {
-             res.status(401).json({message: "only teachers are allowed to perform this action"})
+             res.status(401).json({message: "only teachers are allowed to perform this action😔"})
              return
             }
 

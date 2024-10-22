@@ -17,7 +17,7 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-// Error handling middleware
+// טיפול בשגיאה
 const errorHandler = (err, req, res, next) => {
     if (err instanceof SyntaxError && 'status' in err && err.status === 400 && 'body' in err) {
         console.error("Invalid JSON:", err);
@@ -31,7 +31,9 @@ app.use(errorHandler);
 app.use('/teachers', TeacherRouter_1.default);
 app.use('/students', StudentRouter_1.default);
 app.use('/auth', AuthRouter_1.default);
+// swagger
 app.use('/api-docs', Swagger_1.swaggerUi.serve, Swagger_1.swaggerUi.setup(Swagger_1.specs));
+// הרצת שרת
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port http://localhost:${PORT}`);
 });

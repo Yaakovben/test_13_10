@@ -7,10 +7,9 @@ import mongoose from "mongoose"
 
 const createTeacher = async (user: NewUserDto) => {
     try {
-        console.log(user)
         const{user_name, password, email , class_name} = user
         if (!user_name || !password || !email || !class_name) {
-            throw new Error("All fields are required");
+            throw new Error("All fields are required !!!");
         }
         const user_nameExists = await StudentModel.findOne({user_name}).exec();
         if (user_nameExists) {
@@ -19,26 +18,27 @@ const createTeacher = async (user: NewUserDto) => {
         const hashedPassword = await bcrypt.hash(password, 10)
         const dbUser = new TeacherModel({user_name, password: hashedPassword, email,  class_name})
         await dbUser.save()
-        console.log("teacher added")
+        console.log("teacher Created from Service")
         return dbUser      
-    } catch (error) {
-        console.log(error)
-        throw error
+    } catch (err) {
+        console.log(err)
+        throw err
     }
 } 
 
 
 const getMyStudentsService = async (class_id: string): Promise<Istudent[]> => {
     try {
-
         const students = await StudentModel.find({class_ref: class_id})
         if (!students) {
-            throw new Error("No students found")
+            throw new Error("No students found !!!")
         }
+        console.log("This Your sstodents from service 👌");
         return students
-    } catch (error) {
-        console.log(error)
-        throw error
+        
+    } catch (err) {
+        console.log(err)
+        throw err
     }
 }
 
@@ -46,11 +46,11 @@ const addGradeService = async (teacher_id: string, student_id: string, dto: grad
     try {
         const {title, grade} = dto
         if (!title || !grade) {
-            throw new Error("All fields are required")
+            throw new Error("All fields are required !!!")
         }
         const student = await StudentModel.findById(student_id)
         if (!student) {
-            throw new Error("Student not found")
+            throw new Error("Student not found !!!")
         }
         const teacher = await TeacherModel.findById(teacher_id)
         if (!teacher) {
@@ -59,7 +59,6 @@ const addGradeService = async (teacher_id: string, student_id: string, dto: grad
         if (student.class_ref.toString() !== teacher_id) {
             throw new Error("Student and teacher are not in the same class")
         }
-
         const updatedStudent = await StudentModel.findByIdAndUpdate(student_id, {$push: {grades: dto}}, {new: true})
         if (!updatedStudent) {
             throw new Error("Student not updated")

@@ -5,12 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectToDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+//DB חיבור למונגו 
 const connectToDB = async () => {
     try {
-        await mongoose_1.default.connect("mongodb://localhost:27017/school", {});
+        await mongoose_1.default.connect("mongodb://localhost:27017/newCollege👌", {});
         console.log("connected to mongo db");
     }
-    catch (error) {
+    catch (err) {
+        console.log(err);
     }
 };
 exports.connectToDB = connectToDB;

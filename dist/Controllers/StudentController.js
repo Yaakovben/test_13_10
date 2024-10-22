@@ -5,11 +5,12 @@ const StudentService_1 = require("../Services/StudentService");
 const register = async (req, res) => {
     try {
         const data = await (0, StudentService_1.createStudentService)(req.body);
-        res.status(201).json({ error: false, message: "User Created", data });
+        res.status(201).json({ err: false, message: "User Created 👌", data });
+        console.log("Student Created 👌");
     }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "could not create user", 'error': error.message });
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "could not create user 😔", 'err': err.message });
     }
 };
 exports.register = register;
